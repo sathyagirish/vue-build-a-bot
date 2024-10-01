@@ -7,7 +7,6 @@
 
 <script setup>
 import RobotBuilder from './build/RobotBuilder.vue';
-
 </script>
 
 <style>
