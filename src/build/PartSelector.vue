@@ -1,5 +1,6 @@
 <template>
-    <div class="part">
+    <div class="part" :class="position">
+        <!-- <div> User: {{ userName }}</div> -->
         <img :src="selectedPart.imageUrl" alt="part" />
         <button @click="selectPreviousPart()" class="prev-selector"></button>
         <button @click="selectNextPart()" class="next-selector"></button>
@@ -9,7 +10,14 @@
 <script setup>
 import { computed, ref } from 'vue';
 
-const props = defineProps(['parts']);
+// const userName = inject('userName');
+const props = defineProps({
+  parts: { type: Array, required: true },
+  position: { type: String, required: true },
+});
+
+const emit = defineEmits(['partSelected']);
+
 const selectedPartIndex = ref(0);
 const selectedPart = computed(() => props.parts[selectedPartIndex.value]);
 
@@ -28,6 +36,7 @@ const selectNextPart = () => {
     selectedPartIndex.value,
     props.parts.length,
   );
+  emit('partSelected', selectedPart);
   console.log(selectedPart.value);
 };
 
@@ -36,6 +45,7 @@ const selectPreviousPart = () => {
     selectedPartIndex.value,
     props.parts.length,
   );
+  emit('partSelected', selectedPart);
 };
 </script>
 

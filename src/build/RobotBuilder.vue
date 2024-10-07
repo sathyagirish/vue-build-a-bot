@@ -1,5 +1,22 @@
 <template>
   <div>
+    <div class="preview">
+      <CollapsiblSection>
+      <div class="preview-content">
+        <div class="top-row">
+          <img :src="selectedRobot.head.imageUrl" alt="" />
+        </div>
+        <div class="middle-row">
+          <img :src="selectedRobot.leftArm.imageUrl" class="rotate-left" alt="" />
+          <img :src="selectedRobot.torso.imageUrl" alt="" />
+          <img :src="selectedRobot.rightArm.imageUrl" class="rotate-right" alt="" />
+        </div>
+        <div class="bottom-row">
+          <img :src="selectedRobot.base.imageUrl" alt="" />
+        </div>
+      </div>
+    </CollapsiblSection>
+    </div>
     <button class="add-to-cart" v-on:click="addToCart">Add to cart</button>
     <div class="top-row">
       <div class="top part">
@@ -7,43 +24,52 @@
           {{ selectedRobot.head.title }}
           <span v-if="selectedRobot.head.onSale" class="sale"> On Sale! </span>
         </div>
-        <PartSelector :parts="availableParts.heads" />
+        <PartSelector :parts="availableParts.heads"
+        position="top" @partSelected="handlePartSelected" />
       </div>
     </div>
     <div class="middle-row">
       <div class="left part">
-        <PartSelector :parts="availableParts.arms" />
+        <PartSelector :parts="availableParts.arms"
+        position="left" @partSelected="handlePartSelected" />
       </div>
       <div class="center part">
-        <PartSelector :parts="availableParts.torsos"/>
+        <PartSelector :parts="availableParts.torsos"
+        position="center" @partSelected="handlePartSelected" />
       </div>
       <div class="right part">
-        <PartSelector :parts="availableParts.arms"/>
+        <PartSelector :parts="availableParts.arms"
+        position="right" @partSelected="handlePartSelected" />
       </div>
     </div>
     <div class="bottom-row">
-      <PartSelector :parts="availableParts.bases" :selectedPartIndex="selectedRobot.base" />
+      <PartSelector :parts="availableParts.bases"
+      position="bottom" @partSelected="handlePartSelected"
+        :selectedPartIndex="selectedRobot.base" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import parts from '../data/parts';
 import PartSelector from './PartSelector.vue';
 
 const availableParts = ref(parts);
 const cart = ref([]);
 /* eslint-disable-next-line */
-const selectedRobot = computed(() => {
-  return {
-    head: {},
-    leftArm: {},
-    torso: {},
-    rightArm: {},
-    base: {},
-  };
+const selectedRobot = ref({
+  head: {},
+  leftArm: {},
+  torso: {},
+  rightArm: {},
+  base: {},
 });
+
+const handlePartSelected = (part) => {
+  console.log('Part selected: ', part);
+  selectedRobot.value[part.type] = part;
+};
 
 const addToCart = () => {
   const robot = selectedRobot.value;
@@ -162,5 +188,31 @@ const addToCart = () => {
 
 .right .next-selector {
   right: -3px;
+}
+
+.preview {
+  position: absolute;
+  top: -20px;
+  right: 0;
+  width: 310px;
+  height: 310px;
+  padding: 5px;
+}
+
+.preview-content {
+  border: 1px solid #999;
+}
+
+.preview img {
+  width: 70px;
+  height: 70px;
+}
+
+.rotate-right {
+  transform: rotate(90deg);
+}
+
+.rotate-left {
+  transform: rotate(-90deg);
 }
 </style>

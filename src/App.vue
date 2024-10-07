@@ -6,7 +6,11 @@
 </template>
 
 <script setup>
+import { provide, ref } from 'vue';
 import RobotBuilder from './build/RobotBuilder.vue';
+
+const userName = ref('sathya');
+provide('userName', userName);
 </script>
 
 <style>
