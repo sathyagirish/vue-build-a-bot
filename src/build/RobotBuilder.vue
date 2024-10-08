@@ -2,63 +2,86 @@
   <div>
     <div class="preview">
       <CollapsiblSection>
-      <div class="preview-content">
-        <div class="top-row">
-          <img :src="selectedRobot.head.imageUrl" alt="" />
+        <div class="preview-content">
+          <div class="top-row">
+            <img :src="selectedRobot.head.imageUrl" alt="" />
+          </div>
+          <div class="middle-row">
+            <img :src="selectedRobot.leftArm.imageUrl" class="rotate-left" alt="" />
+            <img :src="selectedRobot.torso.imageUrl" alt="" />
+            <img :src="selectedRobot.rightArm.imageUrl" class="rotate-right" alt="" />
+          </div>
+          <div class="bottom-row">
+            <img :src="selectedRobot.base.imageUrl" alt="" />
+          </div>
         </div>
-        <div class="middle-row">
-          <img :src="selectedRobot.leftArm.imageUrl" class="rotate-left" alt="" />
-          <img :src="selectedRobot.torso.imageUrl" alt="" />
-          <img :src="selectedRobot.rightArm.imageUrl" class="rotate-right" alt="" />
-        </div>
-        <div class="bottom-row">
-          <img :src="selectedRobot.base.imageUrl" alt="" />
-        </div>
-      </div>
-    </CollapsiblSection>
+      </CollapsiblSection>
     </div>
-    <button class="add-to-cart" v-on:click="addToCart">Add to cart</button>
+    <div class="content">
+      <button class="add-to-cart" v-on:click="addToCart">Add to cart</button>
+    </div>
     <div class="top-row">
       <div class="top part">
         <div class="robot-name">
           {{ selectedRobot.head.title }}
           <span v-if="selectedRobot.head.onSale" class="sale"> On Sale! </span>
         </div>
-        <PartSelector :parts="availableParts.heads"
-        position="top" @partSelected="handlePartSelected" />
+        <PartSelector :parts="availableParts.heads" position="top"
+          @partSelected="part => selectedRobot.head = part" />
       </div>
     </div>
     <div class="middle-row">
       <div class="left part">
-        <PartSelector :parts="availableParts.arms"
-        position="left" @partSelected="handlePartSelected" />
+        <PartSelector :parts="availableParts.arms" position="left"
+          @partSelected="part => selectedRobot.leftArm = part" />
       </div>
       <div class="center part">
-        <PartSelector :parts="availableParts.torsos"
-        position="center" @partSelected="handlePartSelected" />
+        <PartSelector :parts="availableParts.torsos" position="center"
+          @partSelected="part => selectedRobot.torso = part" />
       </div>
       <div class="right part">
-        <PartSelector :parts="availableParts.arms"
-        position="right" @partSelected="handlePartSelected" />
+        <PartSelector :parts="availableParts.arms" position="right"
+          @partSelected="part => selectedRobot.rightArm = part" />
       </div>
     </div>
     <div class="bottom-row">
-      <PartSelector :parts="availableParts.bases"
-      position="bottom" @partSelected="handlePartSelected"
+      <PartSelector :parts="availableParts.bases" position="bottom"
+        @partSelected="part => selectedRobot.base = part"
         :selectedPartIndex="selectedRobot.base" />
     </div>
+  </div>
+  <div>
+    <h1>Cart</h1>
+    <table>
+      <thead>
+        <tr>
+          <th class="robot-title">Robot</th>
+          <th class="cost">Cost
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(robot, index) in cartStore.value" :key="index">
+          <td class="robot-title">{{ robot.head.title }}</td>
+          <td class="cost">{{ robot.cost }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
+import useCartStore from '@/stores/cartStore';
 import parts from '../data/parts';
 import PartSelector from './PartSelector.vue';
+import CollapsiblSection from '../shared/CollapsibleSection.vue';
 
 const availableParts = ref(parts);
-const cart = ref([]);
+// const cart = ref([]);
+const cartStore = useCartStore(); // use the store
 /* eslint-disable-next-line */
-const selectedRobot = ref({
+const selectedRobot = ref({ //initialized selectedRobot
   head: {},
   leftArm: {},
   torso: {},
@@ -66,19 +89,19 @@ const selectedRobot = ref({
   base: {},
 });
 
-const handlePartSelected = (part) => {
-  console.log('Part selected: ', part);
-  selectedRobot.value[part.type] = part;
-};
+// const handlePartSelected = (part) => { // update selectedRobot
+//   console.log('Part selected: ', part);
+//   selectedRobot.value[part.type] = part;
+// };
 
 const addToCart = () => {
   const robot = selectedRobot.value;
   const robotCost = robot.head.cost +
     robot.base.cost + robot.leftArm.cost + robot.rightArm.cost +
     robot.torso.cost;
-  cart.value.push([robot, robotCost]);
+  cartStore.push([robot, robotCost]); // mutate the store state
+  console.log('Cart: ', cartStore);
 };
-
 </script>
 
 <style>
@@ -214,5 +237,31 @@ const addToCart = () => {
 
 .rotate-left {
   transform: rotate(-90deg);
+}
+
+.content {
+  position: relative;
+}
+
+.add-to-cart {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 10px;
+  background-color: #f60;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+td,
+th {
+  padding: 5px;
+  text-align: left;
+  padding-right: 20px;
+}
+
+.cost {
+  text-align: right;
 }
 </style>

@@ -1,24 +1,16 @@
 <template>
   <div class="home">
     <!-- <h1>{{ msg }}</h1> -->
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-    </p>
     <div class="get-started">
-      <routerlink to="/build"> Get Started</routerlink>
+      <router-link to="/build"> Get Started building your first Robot</router-link>
     </div>
-    <h3>Installed CLI Plugins</h3>
-    </div>
+  </div>
 </template>
 
-<script>
-export default {
-  name: 'HomePage',
-  props: {
-    msg: String,
-  },
-};
+<script setup>
+// const props = defineProps({
+//   msg: { type: String, required: true },
+// });
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

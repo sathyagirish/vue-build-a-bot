@@ -1,25 +1,35 @@
 <template>
     <div class="part" :class="position">
         <!-- <div> User: {{ userName }}</div> -->
-        <img :src="selectedPart.imageUrl" alt="part" />
+         <router-link :to="{ name: 'Parts',
+         params:{ partType: selectedPart.type,id: selectedPart.id}}">
+            <img :src="selectedPart.imageUrl" alt="part" />
+        </router-link>
         <button @click="selectPreviousPart()" class="prev-selector"></button>
         <button @click="selectNextPart()" class="next-selector"></button>
         <span class="sale" v-show="selectedPart.onSale">Sale!</span>
     </div>
 </template>
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, onUpdated } from 'vue';
 
 // const userName = inject('userName');
 const props = defineProps({
   parts: { type: Array, required: true },
-  position: { type: String, required: true },
+  position: {
+    type: String,
+    required: true,
+    validator: (value) => ['top', 'left', 'right', 'bottom', 'center'].includes(value),
+  },
 });
-
 const emit = defineEmits(['partSelected']);
-
 const selectedPartIndex = ref(0);
 const selectedPart = computed(() => props.parts[selectedPartIndex.value]);
+
+emit('partSelected', selectedPart);
+onUpdated(() => {
+  emit('partSelected', selectedPart);
+});
 
 function getPreviousValidIndex(index, length) {
   const deprecatedIndex = index - 1;
@@ -36,7 +46,7 @@ const selectNextPart = () => {
     selectedPartIndex.value,
     props.parts.length,
   );
-  emit('partSelected', selectedPart);
+  // emit('partSelected', selectedPart);
   console.log(selectedPart.value);
 };
 
@@ -45,7 +55,7 @@ const selectPreviousPart = () => {
     selectedPartIndex.value,
     props.parts.length,
   );
-  emit('partSelected', selectedPart);
+//   emit('partSelected', selectedPart);
 };
 </script>
 
