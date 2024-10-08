@@ -1,13 +1,14 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png">
   <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-   <RobotBuilder />
+   <!-- <RobotBuilder /> -->
+  <router-view />
 
 </template>
 
 <script setup>
 import { provide, ref } from 'vue';
-import RobotBuilder from './build/RobotBuilder.vue';
+// import RobotBuilder from './build/RobotBuilder.vue';
 
 const userName = ref('sathya');
 provide('userName', userName);
