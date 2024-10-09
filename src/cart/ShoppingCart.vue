@@ -18,7 +18,7 @@
                          {{ robot.head.title }}
                     </td>
                     <td class="cost">
-                        {{ robot.cost }}
+                        {{ robot.robotCost }}
                     </td>
                 </tr>
             </tbody>

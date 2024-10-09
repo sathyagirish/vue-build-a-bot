@@ -61,9 +61,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(robot, index) in cartStore.value" :key="index">
+        <tr v-for="(robot, index) in cartStore.cart" :key="index">
           <td class="robot-title">{{ robot.head.title }}</td>
-          <td class="cost">{{ robot.cost }}</td>
+          <td class="cost">{{ robot.robotCost }}</td>
         </tr>
       </tbody>
     </table>
@@ -99,7 +99,7 @@ const addToCart = () => {
   const robotCost = robot.head.cost +
     robot.base.cost + robot.leftArm.cost + robot.rightArm.cost +
     robot.torso.cost;
-  cartStore.push([robot, robotCost]); // mutate the store state
+  cartStore.cart.push({ ...robot, robotCost }); // mutate the store state
   console.log('Cart: ', cartStore);
 };
 </script>
