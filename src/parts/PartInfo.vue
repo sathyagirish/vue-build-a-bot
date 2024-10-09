@@ -8,11 +8,13 @@
 <script setup>
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
-import parts from '../data/parts';
+import usePartsStore from '@/stores/partsStore';
+// import parts from '../data/parts';
 
+const partsStore = usePartsStore();
 const part = computed(() => {
   const route = useRoute();
   const { partType, id } = route.params;
-  return parts[partType].find((individualPart) => individualPart.id === +id);
+  return partsStore[partType].find((individualPart) => individualPart.id === +id);
 });
 </script>

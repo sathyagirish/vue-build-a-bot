@@ -21,6 +21,14 @@
                         {{ robot.robotCost }}
                     </td>
                 </tr>
+                <tr class="total">
+                    <td>
+                        Total
+                    </td>
+                    <td>
+                    {{ cartStore.cartTotal }}
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -54,5 +62,8 @@ th {
 
 .cost {
     text-align: right;
+}
+.total {
+    font-weight: bold;
 }
 </style>

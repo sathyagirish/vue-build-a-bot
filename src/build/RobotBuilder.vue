@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div v-if="partsStore.parts">
+  <div class="content">
     <div class="preview">
       <CollapsiblSection>
         <div class="preview-content">
@@ -26,27 +27,27 @@
           {{ selectedRobot.head.title }}
           <span v-if="selectedRobot.head.onSale" class="sale"> On Sale! </span>
         </div>
-        <PartSelector :parts="availableParts.heads" position="top"
+        <PartSelector :parts="partsStore.parts.heads" position="top"
           @partSelected="part => selectedRobot.head = part" />
       </div>
     </div>
     <div class="middle-row">
       <div class="left part">
-        <PartSelector :parts="availableParts.arms" position="left"
+        <PartSelector :parts="partsStore.parts.arms" position="left"
           @partSelected="part => selectedRobot.leftArm = part" />
       </div>
       <div class="center part">
-        <PartSelector :parts="availableParts.torsos" position="center"
+        <PartSelector :parts="partsStore.parts.torsos" position="center"
           @partSelected="part => selectedRobot.torso = part" />
       </div>
       <div class="right part">
-        <PartSelector :parts="availableParts.arms" position="right"
+        <PartSelector :parts="partsStore.parts.arms" position="right"
           @partSelected="part => selectedRobot.rightArm = part" />
       </div>
     </div>
     <div class="bottom-row">
-      <PartSelector :parts="availableParts.bases" position="bottom"
-        @partSelected="part => selectedRobot.base = part"
+      <PartSelector :parts="partsStore.parts.bases" position="bottom"
+      @partSelected="part => selectedRobot.base = part"
         :selectedPartIndex="selectedRobot.base" />
     </div>
   </div>
@@ -68,18 +69,24 @@
       </tbody>
     </table>
   </div>
+</div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import useCartStore from '@/stores/cartStore';
-import parts from '../data/parts';
+import usePartsStore from '@/stores/partsStore';
+// import parts from '../data/parts';
 import PartSelector from './PartSelector.vue';
 import CollapsiblSection from '../shared/CollapsibleSection.vue';
 
-const availableParts = ref(parts);
+// const availableParts = ref(parts);
 // const cart = ref([]);
 const cartStore = useCartStore(); // use the store
+const partsStore = usePartsStore(); // use the store
+
+partsStore.getParts(); // get the parts from the store
+
 /* eslint-disable-next-line */
 const selectedRobot = ref({ //initialized selectedRobot
   head: {},
